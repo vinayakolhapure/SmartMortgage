@@ -19,20 +19,16 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					  </button>
-					  <a class="navbar-brand" href="assetIndex.html">Asset Inventory</a>
+					  <a class="navbar-brand" href="smartMortgage.html">Smart Mortgage</a>
 					</div>
-
-					<!-- Collect the nav links, forms, and other content for toggling -->
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul class="nav navbar-nav">
-							<li class="active"><a href="createAsset.html">Create Asset<span class="sr-only">(current)</span></a></li>
-							<li><a href="updateAsset.html">Update Owner</a></li>
-							<li><a href="getAssetIDByBBL.html">Get Asset ID</a></li>
-							<li><a href="getLogs.html">Asset Logs</a></li>
+							<li class="active"><a href="registerMortgage.html">Register Mortgage<span class="sr-only">(current)</span></a></li>
+							<li><a href="#">Update Mortgage</a></li>
 					  </ul>
 					  <div class="form-group navbar-form navbar-right">
 						  <input type="text" id="searchID" class="form-control" placeholder="Search... Enter Asset ID.">
-						  <button type="submit" onclick="App.searchAssetByID()" class="btn btn-default">Search</button>
+						  <button type="submit" onclick="" class="btn btn-default">Search</button>
 						</div>
 					</div><!-- /.navbar-collapse -->
 				  </div><!-- /.container-fluid -->
@@ -41,66 +37,74 @@
 		</header>
 		<div class="container">
 			<div class="row">
-				<div class="col-sm-6">
+				<div class="col-sm-12">
 					<div class="panel panel-default">
-					  <div class="panel-heading"><h3>Lookup Asset ID</h3></div>
+					  <div class="panel-heading"><h3>Create Mortgage Entry</h3></div>
 					  <div class="panel-body">
 						<div align="center">
-								<div class="form-group row">
-								  <label class="col-sm-2 col-form-label">Block</label>
-								  <div class="col-sm-10">
-									<input class="form-control" id="getBlock" placeholder="Block #">
-								  </div>
-								</div>
-								<div class="form-group row">
-								  <label class="col-sm-2 col-form-label">Borough</label>
-								  <div class="col-sm-10">
-									<input class="form-control" id="getBorough" placeholder="Borough #">
-								  </div>
-								</div>
-								<div class="form-group row">
-								  <label class="col-sm-2 col-form-label">Lot</label>
-								  <div class="col-sm-10">
-									<input class="form-control" id="getLot" placeholder="Lot #">
-								  </div>
-								</div>
-								<div class="form-group row">
-								  <div class="offset-sm-2 col-sm-10">
-                      <button id="getAssetID" class="btn btn-default" onclick="App.getAssetID()">Get Asset ID</button>
-								  </div>
-								</div>
-						</div>
-					  </div>
-					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="panel panel-default">
-					  <div class="panel-heading"><h3>Update Asset Owner</h3></div>
-					  <div class="panel-body">
-						<div align="center">
-								<div class="form-group row">
-								  <label class="col-sm-2 col-form-label">Account #</label>
-								  <div class="col-sm-10">
-									<input class="form-control" id="newOwner" placeholder="New Owner Account #">
-								  </div>
-								</div>
-								<div class="form-group row">
+							<!--<form>-->
+                                <div class="form-group row">
 								  <label class="col-sm-2 col-form-label">Asset ID</label>
 								  <div class="col-sm-10">
-									<input class="form-control" id="assetToUpdate" placeholder="Asset ID to update">
+									<input class="form-control" id="assetid" placeholder="Asset ID">
+								  </div>
+								</div>
+								<div class="form-group row">
+								  <label class="col-sm-2 col-form-label">Time</label>
+								  <div class="col-sm-10">
+									<input class="form-control" id="starttime" placeholder="Registration Time">
+								  </div>
+								</div>
+								<div class="form-group row">
+								  <label class="col-sm-2 col-form-label">Mortgagee#</label>
+								  <div class="col-sm-10">
+									<input class="form-control" id="mortgagee" placeholder="Mortgagee #">
+								  </div>
+								</div>
+								<div class="form-group row">
+								  <label class="col-sm-2 col-form-label">Mortgagor#</label>
+								  <div class="col-sm-10">
+									<input class="form-control" id="mortgagor" placeholder="Mortgagor #">
+								  </div>
+								</div>
+                                <div class="form-group row">
+								  <label class="col-sm-2 col-form-label">Date</label>
+								  <div class="col-sm-10">
+									<input class="form-control" id="datestart" placeholder="Date">
+								  </div>
+								</div>
+                                <div class="form-group row">
+								  <label class="col-sm-2 col-form-label">Principal</label>
+								  <div class="col-sm-10">
+									<input class="form-control" id="principal" placeholder="Principal Amount">
+								  </div>
+								</div>
+                                <div class="form-group row">
+								  <label class="col-sm-2 col-form-label">Term</label>
+								  <div class="col-sm-10">
+									<input class="form-control" id="term" placeholder="Loan Term">
+								  </div>
+								</div>
+                                <div class="form-group row">
+								  <label class="col-sm-2 col-form-label">Interest</label>
+								  <div class="col-sm-10">
+									<input class="form-control" id="interestwhole" placeholder="Interest Whole">
+								  </div>
+								</div>
+                                <div class="form-group row">
+								  <label class="col-sm-2 col-form-label">Fraction</label>
+								  <div class="col-sm-10">
+									<input class="form-control" id="interestfraction" placeholder="Interest Fraction">
 								  </div>
 								</div>
 								<div class="form-group row">
 								  <div class="offset-sm-2 col-sm-10">
-                      <button id="getAssetID" class="btn btn-default" onclick="App.updateAsset()">Update Asset</button>
+                                     <button id="create" class="btn btn-default" onclick="App.createMortgage()">Create Mortgage</button>
 								  </div>
 								</div>
-								<div class="form-group row">
-								  <div class="offset-sm-2 col-sm-10" id="updateResult">
-                      
-								  </div>
-								</div>
+							<!--</form>-->
 						</div>
+						<!---->
 					  </div>
 					</div>
 				</div>
@@ -111,8 +115,10 @@
 				<div class="col-sm-12">
 					<div class="panel panel-default">
 						<div class="panel-body">
-							<div align="center" id="returnAssetID">
-								
+							<div align="center">
+								<ul class="list-group" id="createFeedback">
+									
+								</ul>	
 							</div>
 						</div>
 					</div>

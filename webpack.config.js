@@ -13,7 +13,10 @@ module.exports = {
       { from: './app/index.html', to: "index.html" },
 	  { from: './app/createAsset.html', to: "createAsset.html" },
 	  { from: './app/getAssetIDByBBL.html', to: "getAssetIDByBBL.html" },
-	  { from: './app/updateAsset.html', to: "updateAsset.html" }
+	  { from: './app/updateAsset.html', to: "updateAsset.html" },
+    { from: './app/assetIndex.html', to: "assetIndex.html" },
+    { from: './app/smartMortgage.html', to: "smartMortgage.html" },
+    { from: './app/registerMortgage.html', to: "registerMortgage.html" }
     ])
   ],
   module: {

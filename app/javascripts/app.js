@@ -6,7 +6,7 @@ import asset_artifacts from '../../build/contracts/AssetRegistry.json';
 import mortgage_artifacts from '../../build/contracts/SmartMortgage.json';
 
 var AssetRegistry = contract(asset_artifacts);
-//var SmartMortgage = contract(mortgage_artifacts);
+var SmartMortgage = contract(mortgage_artifacts);
 var accounts;
 var account;
 
@@ -159,6 +159,39 @@ window.App = {
 		});
 		events.stopWatching();//Don't know if this works.
 	});
+  },
+  createMortgage: function() {
+    console.log("Called");
+    var self = this;
+    var assetid = parseInt(document.getElementById("assetid").value);
+    var time = parseInt(document.getElementById("starttime").value);
+	  var mortgagee = document.getElementById("mortgagee").value;
+	  var mortgagor = document.getElementById("mortgagor").value;
+    var datestart = parseInt(document.getElementById("datestart").value);
+    var principal = parseInt(document.getElementById("principal").value);
+    var term = parseInt(document.getElementById("term").value);
+    var interestwhole = parseInt(document.getElementById("interestwhole").value);
+    var fraction = parseInt(document.getElementById("interestfraction").value);
+	
+    var meta;
+    SmartMortgage.deployed().then(function(instance) {
+      meta = instance;
+      return meta.createNewMortgage(assetid,time, mortgagee, mortgagor,datestart,principal,term,interestwhole,fraction, web3.eth.coinbase, {from: web3.eth.coinbase});
+    }).then(function(returnVal) {
+      var feedback = document.getElementById("createFeedback");
+	  var mortgageLog = returnVal.logs[0].args;
+      feedback.innerHTML = mortgageLog;
+	  //console.log(returnVal.logs[0].args.assetId);
+      console.log("AFTER RETURNVAL");
+	  console.log(returnVal);	  
+	    //console.log(returnVal.logs);
+    }).catch(function(e) {
+      var feedback = document.getElementById("createFeedback");
+      feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
+      console.log(e);
+	    console.log("ERROR CREATING Mortgage");
+      //self.setStatus("UNAUTHORIZED USER ACCOUNT");
+    });
   }
 }; 
   
