@@ -100,16 +100,26 @@
 					  <div class="panel-body">
 						<div align="center">
 							<!--<form>-->
-                           <div class="col-sm-12">    
-                            <div class="form-group row">
+                <div class="col-sm-12">    
+                  <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label" id="mortgageUpdate">Mortgage ID</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" placeholder="Mortgage ID">
+                                    </div>
+                             </div> 
+                            <div class="form-group row" id="todoUpdate">
+                                    <!--<label class="col-sm-2 col-form-label">Mortgage ID</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" id="mortgageId" placeholder="Mortgage ID">
+                                    </div>-->
                              </div>
                              <div class="form-group row">
-								  <div class="col-sm-6" align="left">
-                                     <button id="acceptUpdate" class="btn btn-default" onclick="">Accept</button>
-								  </div>
+								  							<div class="col-sm-6" align="left">
+                                     <button id="acceptUpdate" class="btn btn-default" onclick="App.acceptUpdate()">Accept</button>
+								 								 </div>
                                   <div class="col-sm-6" align="right">
-                                     <button id="rejectUpdate" class="btn btn-default" onclick="">Reject</button>
-								  </div>
+                                     <button id="rejectUpdate" class="btn btn-default" onclick="App.rejectUpdate()">Reject</button>
+								  								</div>
 							  </div>
                               </div>
 							<!--</form>-->

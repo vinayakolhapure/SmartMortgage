@@ -57,8 +57,8 @@ event ProposedSignoffEvent(address signer, string signerType);
 event ProposalFinalEvent(uint mortgageId);
 event NewMortgageActivatedEvent(uint mortgageId);
 event RevokeProposedMortgageEvent(uint mortgageId);
-event RevokeNewMortgageEvent(uint mortgageId, bool isActive);
-event AcceptNewMortgageEvent(uint mortgageId, bool isActive);
+event RevokeNewMortgageEvent(uint mortgageId, bool isActive,bool needSignOff);
+event AcceptNewMortgageEvent(uint mortgageId, bool isActive,bool needSignOff);
 
 //Functions  
   function getRemoteAssetOwner(uint assetID) constant returns (address){
@@ -70,6 +70,16 @@ event AcceptNewMortgageEvent(uint mortgageId, bool isActive);
       //removed fraction part to avoid stacktoodeep exception.
       bool needSignoff = mortgageIdToMortgageMap[mortgageID].needSignOff;
       return (mortgageID, mortgage.insertInfoTime, mortgage.mortgagee,mortgage.mortgagor,mortgage.loanStartDate,mortgage.loanAmount,mortgage.loanTermMonths,mortgage.interestWholePart,needSignoff);
+  }
+
+  function getPendingMortgageChangeMap(uint mortgageID) constant returns(uint,address,address,uint,uint,uint,bool,bool){
+    var pendingMortgage = mortgageIdToPendingMortgageChangeMap[mortgageID];
+    var info = mortgageIdToPendingMortgageChangeMap[mortgageID].pendingInfo;
+    bool current_mortgagee_signoff = pendingMortgage.current_mortgagee_signoff;
+    bool new_mortgagee_signoff = pendingMortgage.new_mortgagee_signoff;
+    bool mortgagor_signoff = pendingMortgage.mortgagor_signoff;
+
+    return (mortgageID, info.mortgagee, info.mortgagor,info.loanAmount,info.loanTermMonths,info.interestWholePart,current_mortgagee_signoff,new_mortgagee_signoff);
   }
   
   function revokeProposedMortgage(uint _mortgageId)
@@ -104,7 +114,7 @@ event AcceptNewMortgageEvent(uint mortgageId, bool isActive);
        currentMap.needSignOff=false;
        currentMap.isActive=false;
        
-       RevokeNewMortgageEvent(_mortgageId,currentMap.isActive);
+       RevokeNewMortgageEvent(_mortgageId,currentMap.isActive,currentMap.needSignOff);
  } 
 
  function acceptNewMortgage(uint _mortgageId)
@@ -116,8 +126,8 @@ event AcceptNewMortgageEvent(uint mortgageId, bool isActive);
      
      currentMap.needSignOff=false;
      currentMap.isActive=true;
-       
-     AcceptNewMortgageEvent(_mortgageId,currentMap.isActive);
+     mortgageIdToMortgageMap[_mortgageId] = currentMap;  
+     AcceptNewMortgageEvent(_mortgageId,currentMap.isActive,currentMap.needSignOff);
  } 
   
   
