@@ -99,6 +99,8 @@ event AcceptNewMortgageEvent(uint mortgageId, bool isActive);
         throw; 
 
        currentMap.mortgageId = 0;
+       currentMap.currentInfo.mortgagee = 0x0;
+       currentMap.currentInfo.mortgagor = 0x0;
        currentMap.needSignOff=false;
        currentMap.isActive=false;
        

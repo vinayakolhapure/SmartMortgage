@@ -287,13 +287,13 @@ window.App = {
       meta = instance;
       return meta.getMortgageByMortgageID.call(mortgageID);
     }).then(function(returnVal) {
-      console.log(returnVal[9]);
-      //if(returnVal[9]){//mortgagee don't have new mortgage requests. Only Update.
+      console.log(returnVal[8]);
+      if(returnVal[8]){//mortgagee don't have new mortgage requests. Only Update.
         var p = document.createElement('P');
         p.innerHTML = 'MortgageId: ' + mortgageID + ', Mortgagee: ' + returnVal[2] + ', Mortgagor: ' + returnVal[3];
         todoNew.appendChild(p);
         document.getElementById("mortgageIdToDo").value = mortgageID;
-      //}
+      }
     }).catch(function(e) {
       //var feedback = document.getElementById("createFeedback");
       //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
