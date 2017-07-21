@@ -16,7 +16,8 @@ module.exports = {
 	  { from: './app/updateAsset.html', to: "updateAsset.html" },
     { from: './app/assetIndex.html', to: "assetIndex.html" },
     { from: './app/smartMortgage.html', to: "smartMortgage.html" },
-    { from: './app/registerMortgage.html', to: "registerMortgage.html" }
+    { from: './app/registerMortgage.html', to: "registerMortgage.html" },
+    { from: './app/updateMortgage.html', to: "updateMortgage.html" },
     ])
   ],
   module: {

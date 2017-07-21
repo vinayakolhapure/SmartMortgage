@@ -61,6 +61,11 @@ event RevokeProposedMortgageEvent(uint mortgageId);
   function getRemoteAssetOwner(uint assetID) constant returns (address){
       return assetRegistry.getAssetOwnerByAssetID(assetID);
   }
+
+  function getMortgageByMortgageID (uint mortgageID) constant returns (uint,uint,address,address,uint,uint,uint,uint,uint) {
+      var mortgage = mortgageIdToMortgageMap[mortgageID].currentInfo;
+      return (mortgageID, mortgage.insertInfoTime, mortgage.mortgagee,mortgage.mortgagor,mortgage.loanStartDate,mortgage.loanAmount,mortgage.loanTermMonths,mortgage.interestWholePart,mortgage.interestFractionPart);
+  }
   
   function revokeProposedMortgage(uint _mortgageId)
  {
@@ -222,10 +227,7 @@ function getMortgageIds(address _address) constant returns(uint[])
     m.currentInfo.interestWholePart = _interestWholePart;
     m.currentInfo.interestFractionPart = _interestFractionPart;
     
-    //add to asset map
-    assetToMortgageIdMap[mortgageCounter].push(mortgageCounter);
-
-
+    mortgageIdToMortgageMap[mortgageCounter] = m;
     MortgageCreatedEvent(_mortgagee, _mortgagor, mortgageCounter,_mortgagee, _mortgagor,mortgageCounter);  //raise event
   }  
 }

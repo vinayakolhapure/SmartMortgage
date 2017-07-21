@@ -24,7 +24,7 @@
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul class="nav navbar-nav">
 							<li class="active"><a href="registerMortgage.html">Create Mortgage<span class="sr-only">(current)</span></a></li>
-							<li><a href="#">Update Mortgage</a></li>
+							<li><a href="updateMortgage.html">Update Mortgage</a></li>
 					  </ul>
 					  <div class="form-group navbar-form navbar-right">
 						  <input type="text" id="searchID" class="form-control" placeholder="Search... Enter Asset ID.">
@@ -39,15 +39,18 @@
 			<div class="row">
 				<div class="col-sm-12">
 					<div class="panel panel-default">
-					  <div class="panel-heading"><h3>Create Mortgage Entry</h3></div>
+					  <div class="panel-heading"><h3>Update Mortgage</h3></div>
 					  <div class="panel-body">
 						<div align="center">
 							<!--<form>-->
-                            <div class="col-sm-6">    
+                           <div class="col-sm-6">    
                                     <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Asset ID</label>
-                                    <div class="col-sm-10">
-                                        <input class="form-control" id="assetid" placeholder="Asset ID">
+                                    <label class="col-sm-2 col-form-label">Mortgage ID</label>
+                                    <div class="col-sm-8">
+                                        <input class="form-control" id="mortgageId" placeholder="Mortgage ID">
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button id="get" class="btn btn-default" onclick="App.getMortgageInfo()">Get</button>
                                     </div>
                                     </div>
                                     <div class="form-group row">
@@ -59,7 +62,7 @@
                                     <div class="form-group row">
                                     <label class="col-sm-2 col-form-label">Mortgagee#</label>
                                     <div class="col-sm-10">
-                                        <input class="form-control" id="mortgagee" placeholder="Mortgagee #">
+                                        <input class="form-control" id="mortgagee" placeholder="Mortgagee #" disabled>
                                     </div>
                                     </div>
                                     <div class="form-group row">
@@ -68,7 +71,7 @@
                                         <input class="form-control" id="mortgagor" placeholder="Mortgagor #">
                                     </div>
                                     </div>
-                                </div>
+                              </div>
                                 <div class="col-sm-6"> 
                                     <div class="form-group row">
                                     <label class="col-sm-2 col-form-label">Date</label>
@@ -103,7 +106,7 @@
                                 </div>
 								<div class="form-group row">
 								  <div class="offset-sm-2 col-sm-10" align="center">
-                                     <button id="create" class="btn btn-default" onclick="App.createMortgage()">Create Mortgage</button>
+                                     <button id="create" class="btn btn-default" onclick="App.updateMortgage()">Update Mortgage</button>
 								  </div>
 								</div>
 							<!--</form>-->

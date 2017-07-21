@@ -117,7 +117,7 @@ window.App = {
     }).then(function(returnVal) {
       var feedback = document.getElementById("createFeedback");
 	  var assetLog = returnVal.logs[0].args;
-      feedback.innerHTML = 'Event: ' + returnVal.logs[0].event + ', Asset ID: ' + assetLog.assetId + ', Block: ' + assetLog.block + ', Borough: ' + assetLog.borough + ', Lot: ' + assetLog.lot + ', Current Owner: ' + assetLog.currentOwner;
+    feedback.innerHTML = 'Event: ' + returnVal.logs[0].event + ', Asset ID: ' + assetLog.assetId + ', Block: ' + assetLog.block + ', Borough: ' + assetLog.borough + ', Lot: ' + assetLog.lot + ', Current Owner: ' + assetLog.currentOwner;
 	  console.log(returnVal.logs[0].args.assetId);
       console.log("AFTER RETURNVAL");
 	  console.log(returnVal);	  
@@ -178,19 +178,79 @@ window.App = {
       meta = instance;
       return meta.createNewMortgage(assetid,time, mortgagee, mortgagor,datestart,principal,term,interestwhole,fraction, web3.eth.coinbase, {from: web3.eth.coinbase});
     }).then(function(returnVal) {
-      var feedback = document.getElementById("createFeedback");
+    var feedback = document.getElementById("createFeedback");
 	  var mortgageLog = returnVal.logs[0].args;
-      feedback.innerHTML = mortgageLog;
-	  //console.log(returnVal.logs[0].args.assetId);
-      console.log("AFTER RETURNVAL");
+    feedback.innerHTML = 'Event: ' + returnVal.logs[0].event + ' Mortgage ID: ' + mortgageLog.morgageId +  ', Mortgagee: ' + mortgageLog.indexMortgagee + ', Mortgagor: ' + mortgageLog.indexMortgagor;
+    console.log("AFTER RETURNVAL");
 	  console.log(returnVal);	  
-	    //console.log(returnVal.logs);
     }).catch(function(e) {
       var feedback = document.getElementById("createFeedback");
       feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
       console.log(e);
 	    console.log("ERROR CREATING Mortgage");
-      //self.setStatus("UNAUTHORIZED USER ACCOUNT");
+    });
+  },
+  updateMortgage: function() {
+    console.log("Called");
+    var self = this;
+    var mortgageId = parseInt(document.getElementById("mortgageId").value);
+    var time = parseInt(document.getElementById("starttime").value);
+	  var mortgagee = document.getElementById("mortgagee").value;
+	  var mortgagor = document.getElementById("mortgagor").value;
+    var datestart = parseInt(document.getElementById("datestart").value);
+    var principal = parseInt(document.getElementById("principal").value);
+    var term = parseInt(document.getElementById("term").value);
+    var interestwhole = parseInt(document.getElementById("interestwhole").value);
+    var fraction = parseInt(document.getElementById("interestfraction").value);
+	
+    var meta;
+    SmartMortgage.deployed().then(function(instance) {
+      meta = instance;
+      return meta.proposedMortgageUpdate(mortgageId,time, mortgagee, mortgagor,datestart,principal,term,interestwhole,fraction, web3.eth.coinbase, {from: web3.eth.coinbase});
+    }).then(function(returnVal) {
+    var feedback = document.getElementById("createFeedback");
+	  var mortgageLog = returnVal.logs[0].args;
+    feedback.innerHTML = 'Event: ' + returnVal.logs[0].event + ' Mortgage ID: ' + mortgageLog.indexMortgageId +  ', Mortgagee: ' + mortgageLog.indexMortgagee + ', Mortgagor: ' + mortgageLog.indexMortgagor;
+    console.log("AFTER RETURNVAL");
+	  console.log(returnVal);	  
+    }).catch(function(e) {
+      var feedback = document.getElementById("createFeedback");
+      feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
+      console.log(e);
+	    console.log("ERROR CREATING Mortgage");
+    });
+  },
+  getMortgageInfo: function() {
+    console.log("Called");
+    var self = this;    
+    var time =document.getElementById("starttime");
+	  var mortgagee = document.getElementById("mortgagee");
+	  var mortgagor = document.getElementById("mortgagor");
+    var datestart = document.getElementById("datestart");
+    var principal = document.getElementById("principal");
+    var term = document.getElementById("term");
+    var interestwhole = document.getElementById("interestwhole");
+    var fraction = document.getElementById("interestfraction");
+	  var mortgageId = parseInt(document.getElementById("mortgageId").value);
+    var meta;
+    SmartMortgage.deployed().then(function(instance) {
+      meta = instance;
+      return meta.getMortgageByMortgageID.call(mortgageId);
+    }).then(function(returnVal) {
+      console.log(returnVal);
+      time.value = returnVal[1];
+      mortgagee.value = returnVal[2];
+      mortgagor.value = returnVal[3];
+      datestart.value = returnVal[4];
+      principal.value = returnVal[5];
+      term.value = returnVal[6];
+      interestwhole.value = returnVal[7];
+      fraction.value = returnVal[8];
+    }).catch(function(e) {
+      //var feedback = document.getElementById("createFeedback");
+      //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
+      console.log(e);
+	    console.log("ERROR Get Mortgage BY ID");
     });
   }
 }; 
