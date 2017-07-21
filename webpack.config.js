@@ -18,6 +18,7 @@ module.exports = {
     { from: './app/smartMortgage.html', to: "smartMortgage.html" },
     { from: './app/registerMortgage.html', to: "registerMortgage.html" },
     { from: './app/updateMortgage.html', to: "updateMortgage.html" },
+    { from: './app/todoMortgage.html', to: "todoMortgage.html" }
     ])
   ],
   module: {

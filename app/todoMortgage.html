@@ -21,19 +21,11 @@
 					  </button>
 					  <a class="navbar-brand" href="index.html">Home</a>
 					</div>
-
-					<!-- Collect the nav links, forms, and other content for toggling -->
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul class="nav navbar-nav">
-							<li><a href="createAsset.html">Create Asset<span class="sr-only">(current)</span></a></li>
-							<li class="active"><a href="updateAsset.html">Update Owner</a></li>
-							<li><a href="getAssetIDByBBL.html">Get Asset ID</a></li>
-							<li><a href="getLogs.html">Asset Logs</a></li>
+							<li><a href="registerMortgage.html">Create Mortgage<span class="sr-only">(current)</span></a></li>
+							<li><a href="updateMortgage.html">Update Mortgage</a></li>
 					  </ul>
-					  <div class="form-group navbar-form navbar-right">
-						  <input type="text" id="searchID" class="form-control" placeholder="Search... Enter Asset ID.">
-						  <button type="submit" onclick="App.searchAssetByID()" class="btn btn-default">Search</button>
-						</div>
 					</div><!-- /.navbar-collapse -->
 				  </div><!-- /.container-fluid -->
 				</nav>
@@ -43,64 +35,60 @@
 			<div class="row">
 				<div class="col-sm-6">
 					<div class="panel panel-default">
-					  <div class="panel-heading"><h3>Lookup Asset ID</h3></div>
+					  <div class="panel-heading"><h3>New Mortgage Requests</h3></div>
 					  <div class="panel-body">
 						<div align="center">
-								<div class="form-group row">
-								  <label class="col-sm-2 col-form-label">Block</label>
-								  <div class="col-sm-10">
-									<input class="form-control" id="getBlock" placeholder="Block #">
+              <div class="col-sm-12">   
+														<div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Mortgage ID</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" id="mortgageIdToDo" placeholder="Mortgage ID">
+                                    </div>
+                             </div> 
+                            <div class="form-group row" id="todoNew">
+                                    <!--<label class="col-sm-2 col-form-label">Mortgage ID</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" id="mortgageId" placeholder="Mortgage ID">
+                                    </div>-->
+                             </div>
+                             <div class="form-group row">
+								  <div class="col-sm-6" align="left">
+                                     <button id="acceptNew" class="btn btn-default" onclick="App.acceptNew()">Accept</button>
 								  </div>
-								</div>
-								<div class="form-group row">
-								  <label class="col-sm-2 col-form-label">Borough</label>
-								  <div class="col-sm-10">
-									<input class="form-control" id="getBorough" placeholder="Borough #">
+                                  <div class="col-sm-6" align="right">
+                                     <button id="RejectNew" class="btn btn-default" onclick="App.rejectNew()">Reject</button>
 								  </div>
-								</div>
-								<div class="form-group row">
-								  <label class="col-sm-2 col-form-label">Lot</label>
-								  <div class="col-sm-10">
-									<input class="form-control" id="getLot" placeholder="Lot #">
-								  </div>
-								</div>
-								<div class="form-group row">
-								  <div class="offset-sm-2 col-sm-10">
-                      <button id="getAssetID" class="btn btn-default" onclick="App.getAssetID()">Get Asset ID</button>
-								  </div>
-								</div>
+							  </div>
+              </div>
 						</div>
 					  </div>
 					</div>
 				</div>
-				<div class="col-sm-6">
+                <div class="col-sm-6">
 					<div class="panel panel-default">
-					  <div class="panel-heading"><h3>Update Asset Owner</h3></div>
+					  <div class="panel-heading"><h3>Update Mortgage Requests</h3></div>
 					  <div class="panel-body">
 						<div align="center">
-								<div class="form-group row">
-								  <label class="col-sm-2 col-form-label">Account #</label>
-								  <div class="col-sm-10">
-									<input class="form-control" id="newOwner" placeholder="New Owner Account #">
+							<!--<form>-->
+                           <div class="col-sm-12">    
+                            <div class="form-group row">
+                                    <!--<label class="col-sm-2 col-form-label">Mortgage ID</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" id="mortgageId" placeholder="Mortgage ID">
+                                    </div>-->
+                             </div>
+                             <div class="form-group row">
+								  <div class="col-sm-6" align="left">
+                                     <button id="acceptUpdate" class="btn btn-default" onclick="">Accept</button>
 								  </div>
-								</div>
-								<div class="form-group row">
-								  <label class="col-sm-2 col-form-label">Asset ID</label>
-								  <div class="col-sm-10">
-									<input class="form-control" id="assetToUpdate" placeholder="Asset ID to update">
+                                  <div class="col-sm-6" align="right">
+                                     <button id="rejectUpdate" class="btn btn-default" onclick="">Reject</button>
 								  </div>
-								</div>
-								<div class="form-group row">
-								  <div class="offset-sm-2 col-sm-10">
-                      <button id="getAssetID" class="btn btn-default" onclick="App.updateAsset()">Update Asset</button>
-								  </div>
-								</div>
-								<div class="form-group row">
-								  <div class="offset-sm-2 col-sm-10" id="updateResult">
-                      
-								  </div>
-								</div>
+							  </div>
+                              </div>
+							<!--</form>-->
 						</div>
+						<!---->
 					  </div>
 					</div>
 				</div>
@@ -111,8 +99,10 @@
 				<div class="col-sm-12">
 					<div class="panel panel-default">
 						<div class="panel-body">
-							<div align="center" id="returnAssetID">
-								
+							<div align="center">
+								<ul class="list-group" id="createFeedback">
+									
+								</ul>	
 							</div>
 						</div>
 					</div>

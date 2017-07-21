@@ -22,6 +22,7 @@ contract SmartMortgage is AssetRetriever {
      uint assetId;
      uint mortgageId;
      bool isActive;
+     bool needSignOff;
      MortgageInfo currentInfo;
      MortgageInfo[] previousInfo;
   }
@@ -56,15 +57,19 @@ event ProposedSignoffEvent(address signer, string signerType);
 event ProposalFinalEvent(uint mortgageId);
 event NewMortgageActivatedEvent(uint mortgageId);
 event RevokeProposedMortgageEvent(uint mortgageId);
+event RevokeNewMortgageEvent(uint mortgageId, bool isActive);
+event AcceptNewMortgageEvent(uint mortgageId, bool isActive);
 
 //Functions  
   function getRemoteAssetOwner(uint assetID) constant returns (address){
       return assetRegistry.getAssetOwnerByAssetID(assetID);
   }
 
-  function getMortgageByMortgageID (uint mortgageID) constant returns (uint,uint,address,address,uint,uint,uint,uint,uint) {
+  function getMortgageByMortgageID (uint mortgageID) constant returns (uint,uint,address,address,uint,uint,uint,uint,bool) {
       var mortgage = mortgageIdToMortgageMap[mortgageID].currentInfo;
-      return (mortgageID, mortgage.insertInfoTime, mortgage.mortgagee,mortgage.mortgagor,mortgage.loanStartDate,mortgage.loanAmount,mortgage.loanTermMonths,mortgage.interestWholePart,mortgage.interestFractionPart);
+      //removed fraction part to avoid stacktoodeep exception.
+      bool needSignoff = mortgageIdToMortgageMap[mortgageID].needSignOff;
+      return (mortgageID, mortgage.insertInfoTime, mortgage.mortgagee,mortgage.mortgagor,mortgage.loanStartDate,mortgage.loanAmount,mortgage.loanTermMonths,mortgage.interestWholePart,needSignoff);
   }
   
   function revokeProposedMortgage(uint _mortgageId)
@@ -84,6 +89,33 @@ event RevokeProposedMortgageEvent(uint mortgageId);
        pendingMap.mortgagor_signoff = false; 
        
        RevokeProposedMortgageEvent(_mortgageId);
+ } 
+
+  function revokeNewMortgage(uint _mortgageId)
+ {
+    var currentMap = mortgageIdToMortgageMap[_mortgageId];
+    
+     if (msg.sender !=  currentMap.currentInfo.mortgagor)
+        throw; 
+
+      
+       currentMap.needSignOff=false;
+       currentMap.isActive=false;
+       
+       RevokeNewMortgageEvent(_mortgageId,currentMap.isActive);
+ } 
+
+ function acceptNewMortgage(uint _mortgageId)
+ {
+    var currentMap = mortgageIdToMortgageMap[_mortgageId];
+    
+     if (msg.sender !=  currentMap.currentInfo.mortgagor)
+        throw; 
+     currentMap.mortgageId = 0;
+     currentMap.needSignOff=false;
+     currentMap.isActive=true;
+       
+     AcceptNewMortgageEvent(_mortgageId,currentMap.isActive);
  } 
   
   
@@ -216,6 +248,7 @@ function getMortgageIds(address _address) constant returns(uint[])
     m.assetId = _assetId;
     m.mortgageId = mortgageCounter;
     m.isActive = false;
+    m.needSignOff = true;
     m.last_block_number = block.number;
     
     m.currentInfo.insertInfoTime = _insertInfoTime;

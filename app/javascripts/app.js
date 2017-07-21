@@ -180,8 +180,8 @@ window.App = {
     }).then(function(returnVal) {
     var feedback = document.getElementById("createFeedback");
 	  var mortgageLog = returnVal.logs[0].args;
-    feedback.innerHTML = 'Event: ' + returnVal.logs[0].event + ' Mortgage ID: ' + mortgageLog.morgageId +  ', Mortgagee: ' + mortgageLog.indexMortgagee + ', Mortgagor: ' + mortgageLog.indexMortgagor;
-    console.log("AFTER RETURNVAL");
+    feedback.innerHTML = 'Mortgage creating pending approval from client \n' + 'Event: ' + returnVal.logs[0].event + ' Mortgage ID: ' + mortgageLog.morgageId +  ', Mortgagee: ' + mortgageLog.indexMortgagee + ', Mortgagor: ' + mortgageLog.indexMortgagor;
+    console.log("AFTER RETURNVAL"); 
 	  console.log(returnVal);	  
     }).catch(function(e) {
       var feedback = document.getElementById("createFeedback");
@@ -220,6 +220,29 @@ window.App = {
 	    console.log("ERROR CREATING Mortgage");
     });
   },
+
+  todoMortgage:function(){
+    var self = this;
+    var mortgageIds = [];
+    var meta;
+    console.log("todo");
+    SmartMortgage.deployed().then(function(instance) {
+      meta = instance;
+      return meta.getMortgageIds.call(web3.eth.coinbase);
+    }).then(function(returnVal) {
+      var todonew = document.getElementById("todoNew");
+      for(var i=0; i< returnVal.length; i++){
+        self.getMortgageToDo(returnVal[i]);
+    }
+    document.getElementById("todo").style.visibility = "visible";
+    }).catch(function(e) {
+      //var feedback = document.getElementById("createFeedback");
+      //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
+      console.log(e);
+	    console.log("ERROR Get Mortgage BY ID");
+    });
+  },
+
   getMortgageInfo: function() {
     console.log("Called");
     var self = this;    
@@ -251,6 +274,65 @@ window.App = {
       //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
       console.log(e);
 	    console.log("ERROR Get Mortgage BY ID");
+    });
+  },
+
+  getMortgageToDo: function(id) {
+    console.log("Called");
+    var mortgageID = id;
+    console.log(id);
+    var meta;
+    var todoNew = document.getElementById("todoNew");
+    SmartMortgage.deployed().then(function(instance) {
+      meta = instance;
+      return meta.getMortgageByMortgageID.call(mortgageID);
+    }).then(function(returnVal) {
+      console.log(returnVal[9]);
+      //if(returnVal[9]){//mortgagee don't have new mortgage requests. Only Update.
+        var p = document.createElement('P');
+        p.innerHTML = 'MortgageId: ' + mortgageID + ', Mortgagee: ' + returnVal[2] + ', Mortgagor: ' + returnVal[3];
+        todoNew.appendChild(p);
+        document.getElementById("mortgageIdToDo").value = mortgageID;
+      //}
+    }).catch(function(e) {
+      //var feedback = document.getElementById("createFeedback");
+      //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
+      console.log(e);
+	    console.log("ERROR Get Mortgage BY ID");
+    });
+  },
+  acceptNew: function(id) {
+    var mortgageID = document.getElementById("mortgageIdToDo").value;
+    var meta;
+    console.log("accept new");
+    //var todoNew = document.getElementById("todoNew");
+    SmartMortgage.deployed().then(function(instance) {
+      meta = instance;
+      return meta.acceptNewMortgage(mortgageID, {from: web3.eth.coinbase});
+    }).then(function(returnVal) {
+      console.log(returnVal);
+    }).catch(function(e) {
+      //var feedback = document.getElementById("createFeedback");
+      //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
+      console.log(e);
+	    console.log("ERROR Accept New Mortgage");
+    });
+  },
+  rejectNew: function(id) {
+    var mortgageID = document.getElementById("mortgageIdToDo").value;
+    var meta;
+    //var todoNew = document.getElementById("todoNew");
+    console.log("reject new");
+    SmartMortgage.deployed().then(function(instance) {
+      meta = instance;
+      return meta.revokeNewMortgage(mortgageID, {from: web3.eth.coinbase});
+    }).then(function(returnVal) {
+      console.log(returnVal);
+    }).catch(function(e) {
+      //var feedback = document.getElementById("createFeedback");
+      //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
+      console.log(e);
+	    console.log("ERROR Reject New Mortgage");
     });
   }
 }; 
