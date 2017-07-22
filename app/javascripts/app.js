@@ -103,6 +103,28 @@ window.App = {
     });
   },
 
+  createAlert: function (elementId, log, status){
+   var myAlert = document.getElementById(elementId);
+   if(status==0)
+    myAlert.className += " " + "alert-success";
+   if(status==1) 
+    myAlert.className += " " + "alert-danger";
+	 var child = myAlert.getElementsByTagName("P")[0];
+   console.log("create Alert " + child);
+	 if(child==null){
+				child = document.createElement("P");
+				myAlert.appendChild(child);
+        console.log("create Alert " + child);
+	 }
+	 child.innerHTML = log;
+	 myAlert.style.display = "block";
+	 var span = document.getElementsByClassName("close")[0];
+	 span.onclick = function() {
+   child.innerHTML = "";
+			myAlert.style.display = "none";
+		} 
+  },
+
   createAsset: function() {
     console.log("Called");
     var self = this;
@@ -115,16 +137,18 @@ window.App = {
       meta = instance;
       return meta.createAsset(block, borough, lot, web3.eth.coinbase, {from: web3.eth.coinbase});
     }).then(function(returnVal) {
-      var feedback = document.getElementById("createFeedback");
+    //var feedback = document.getElementById("createFeedback");
 	  var assetLog = returnVal.logs[0].args;
-    feedback.innerHTML = 'Event: ' + returnVal.logs[0].event + ', Asset ID: ' + assetLog.assetId + ', Block: ' + assetLog.block + ', Borough: ' + assetLog.borough + ', Lot: ' + assetLog.lot + ', Current Owner: ' + assetLog.currentOwner;
-	  console.log(returnVal.logs[0].args.assetId);
-      console.log("AFTER RETURNVAL");
+    //'Event: ' + returnVal.logs[0].event + ', Asset ID: ' + assetLog.assetId + ', Block: ' + assetLog.block + ', Borough: ' + assetLog.borough + ', Lot: ' + assetLog.lot + ', Current Owner: ' + assetLog.currentOwner;
+    var log = 'Success! ' + returnVal.logs[0].event + ', Asset ID: ' + assetLog.assetId + ', Current Owner: ' + assetLog.currentOwner;
+	  self.createAlert("createAssetAlert",log, 0);
 	  console.log(returnVal);	  
 	    //console.log(returnVal.logs);
     }).catch(function(e) {
-      var feedback = document.getElementById("createFeedback");
-      feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
+      //var feedback = document.getElementById("createFeedback");
+      var log = "ERROR!!! CREATING ASSET, invalid input or invalid user";
+      self.createAlert("createAssetAlert",log, 1)
+      //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
       console.log(e);
 	    console.log("ERROR CREATING ASSET");
       //self.setStatus("UNAUTHORIZED USER ACCOUNT");
