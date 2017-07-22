@@ -27,14 +27,12 @@
                         <li class="active"><a href="registerMortgage.html">Register Mortgage<span class="sr-only">(current)</span></a></li>
                         <li><a href="updateMortgage.html">Update Mortgage</a></li>
                      </ul>
-                     <div class="form-group navbar-form navbar-right">
-                        <li><button type="submit" onclick="App.todoMortgage()" class="btn btn-default">To Do</button></li>
-                     </div>
-										 <div class="form-group navbar-form navbar-left">
+                     
+					 <div class="form-group navbar-form navbar-right">
                         <input type="text" id="searchID" class="form-control" placeholder="Search">
 												<button type="submit" onclick="App.getMortgageByID()" class="btn btn-default">Search</button>
                      </div>
-										 <div class="form-group navbar-form navbar-right">
+					 <div class="form-group navbar-form navbar-right">
                      </div>
                   </div>
                   <!-- /.navbar-collapse -->
@@ -63,6 +61,10 @@
                                  <a href="updateMortgage.html" class="btn btn-default btn-block">Update Mortgage
                                  </a>
                               </tr>
+                              <tr>
+                                 <a href="#" onclick="App.pendingRequests()" class="btn btn-default btn-block">Pending Requests
+                                 </a>
+                              </tr>
                            </tbody>
                         </table>
                      </div>
@@ -72,7 +74,7 @@
          </div>
       </div>
 
-      <div class="container">
+      <div class="container" id="pendingPanel" style="visibility: hidden;">
          <div class="row">
             <div class="col-sm-12">
                <div class="panel panel-default">
@@ -83,7 +85,7 @@
                      <div align="center">
                         <div class="tabbable">
                            <ul class="nav nav-tabs nav-pills" id="myTab">
-                              <li class="active"> <a href="#tab1" onclick="" data-toggle="tab">New Mortgage Requests</a></li>
+                              <li class="active"> <a href="#tab1" onclick="App.newMortgageRequest()" data-toggle="tab">New Mortgage Requests</a></li>
                               <li class=""> <a href="#tab2" onclick="App.pendingMortgageChangeRequest()" data-toggle="tab">Transfer Mortgage Requests</a></li>
                               </li>
                            </ul>
