@@ -298,7 +298,7 @@ window.App = {
         todoNew.appendChild(p);
         document.getElementById("mortgageIdToDo").value = mortgageID;
       }
-     // self.getPendingMortgage(mortgageID);
+      self.getPendingMortgage(mortgageID);
     }).catch(function(e) {
       //var feedback = document.getElementById("createFeedback");
       //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
