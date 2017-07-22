@@ -264,6 +264,7 @@ window.App = {
         if(returnVal[8]){
           //'MortgageId: ' + mortgageId + ', Mortgagee: ' + returnVal[1] + ', Mortgagor: ' + returnVal[2];
           var tableRef = document.getElementById('newReqTable').getElementsByTagName('tbody')[0];
+          tableRef.innerHTML = "";
           var newRow   = tableRef.insertRow(tableRef.rows.length);
           //mortgageID
           var newCell  = newRow.insertCell(0);
@@ -281,8 +282,8 @@ window.App = {
           var buttonsCell = newRow.insertCell(3);
           var btn = document.createElement('button');
           
-          btn.className += "btn";	
-          btn.className += "btn-default";	
+          btn.className += " " +"btn";	
+          btn.className += " " +"btn-default";	
           btn.innerText = "Accept";
           
           var space  = document.createTextNode(' ');
@@ -291,8 +292,8 @@ window.App = {
           btn.setAttribute("onclick","App.acceptNew(this)");
           var btn2 = document.createElement('button');
           
-          btn2.className += "btn";	
-          btn2.className += "btn-default";
+          btn2.className += " " +"btn";	
+          btn2.className += " " +"btn-default";
           btn2.innerText  = "Reject";
           btn2.setAttribute("onclick","App.rejectNew(this)");
 
@@ -380,6 +381,7 @@ window.App = {
       if(returnVal[1]!='0x0000000000000000000000000000000000000000'){//mortgagee don't have new mortgage requests. Only Update.
         //'MortgageId: ' + mortgageId + ', Mortgagee: ' + returnVal[1] + ', Mortgagor: ' + returnVal[2];
         var tableRef = document.getElementById('updReqTable').getElementsByTagName('tbody')[0];
+        tableRef.innerHTML = "";
 			  var newRow   = tableRef.insertRow(tableRef.rows.length);
         //mortgageID
         var newCell  = newRow.insertCell(0);
@@ -397,8 +399,8 @@ window.App = {
         var buttonsCell = newRow.insertCell(3);
         var btn = document.createElement('button');
         
-        btn.className += "btn";	
-        btn.className += "btn-default";	
+        btn.className += " " +"btn";	
+        btn.className += " " +"btn-default";	
         btn.innerText = "Accept";
         
         var space  = document.createTextNode(' ');
@@ -407,8 +409,8 @@ window.App = {
         btn.setAttribute("onclick","App.acceptUpdate(this)");
         var btn2 = document.createElement('button');
         
-        btn2.className += "btn";	
-        btn2.className += "btn-default";
+        btn2.className += " " +"btn";	
+        btn2.className += " " +"btn-default";
         btn2.innerText  = "Reject";
         btn2.setAttribute("onclick","App.rejectUpdate(this)");
 
