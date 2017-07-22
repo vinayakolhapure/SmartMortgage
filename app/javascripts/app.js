@@ -94,11 +94,12 @@ window.App = {
     }).then(function(returnVal) {
 	  console.log(returnVal);
 	  var assetLog = returnVal.logs[0].args;
-      var result = document.getElementById("updateResult");
-      result.innerHTML = 'Event: ' + returnVal.logs[0].event + ', Asset ID: ' + assetLog.assetId + ', Current Owner: ' + assetLog.currentOwner;
-    }).catch(function(e) {
-	  var result = document.getElementById("updateResult");
-	  result.innerHTML = 'Update Error! User unauthorized, or invalid input';
+    var log = 'Success! ' + returnVal.logs[0].event + ', Asset ID: ' + assetLog.assetId + ', Current Owner: ' + assetLog.currentOwner;
+	  self.createAlert("updateResult",log, 0);
+    //result.innerHTML = 'Event: ' + returnVal.logs[0].event + ', Asset ID: ' + assetLog.assetId + ', Current Owner: ' + assetLog.currentOwner;
+  }).catch(function(e) {
+    var log = 'Update Error! User unauthorized, or invalid input';
+    self.createAlert("updateResult",log, 1);
       console.log(e);
     });
   },
@@ -146,7 +147,7 @@ window.App = {
 	    //console.log(returnVal.logs);
     }).catch(function(e) {
       //var feedback = document.getElementById("createFeedback");
-      var log = "ERROR!!! CREATING ASSET, invalid input or invalid user";
+      var log = "Error! Creating Asset, invalid input or invalid user";
       self.createAlert("createAssetAlert",log, 1)
       //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
       console.log(e);
@@ -202,14 +203,14 @@ window.App = {
       meta = instance;
       return meta.createNewMortgage(assetid,time, mortgagee, mortgagor,datestart,principal,term,interestwhole,fraction, web3.eth.coinbase, {from: web3.eth.coinbase});
     }).then(function(returnVal) {
-    var feedback = document.getElementById("createFeedback");
 	  var mortgageLog = returnVal.logs[0].args;
-    feedback.innerHTML = 'Mortgage creating pending approval from client \n' + 'Event: ' + returnVal.logs[0].event + ' Mortgage ID: ' + mortgageLog.morgageId +  ', Mortgagee: ' + mortgageLog.indexMortgagee + ', Mortgagor: ' + mortgageLog.indexMortgagor;
+    var log = 'Success' + 'Pending approval' + ' Event: ' + returnVal.logs[0].event + ' Mortgage ID: ' + mortgageLog.morgageId +  ', Mortgagee: ' + mortgageLog.indexMortgagee + ', Mortgagor: ' + mortgageLog.indexMortgagor;
+    self.createAlert("createMortgageAlert",log, 0);
     console.log("AFTER RETURNVAL"); 
 	  console.log(returnVal);	  
     }).catch(function(e) {
-      var feedback = document.getElementById("createFeedback");
-      feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
+      var logE = 'Error creating mortgage! User unauthorized, or invalid input'
+      self.createAlert("createMortgageAlert",logE, 1);
       console.log(e);
 	    console.log("ERROR CREATING Mortgage");
     });
@@ -232,14 +233,15 @@ window.App = {
       meta = instance;
       return meta.proposedMortgageUpdate(mortgageId,time, mortgagee, mortgagor,datestart,principal,term,interestwhole,fraction, web3.eth.coinbase, {from: web3.eth.coinbase});
     }).then(function(returnVal) {
-    var feedback = document.getElementById("createFeedback");
 	  var mortgageLog = returnVal.logs[0].args;
-    feedback.innerHTML = 'Event: ' + returnVal.logs[0].event + ' Mortgage ID: ' + mortgageLog.indexMortgageId +  ', Mortgagee: ' + mortgageLog.indexMortgagee + ', Mortgagor: ' + mortgageLog.indexMortgagor;
+    var log = 'Success!' + 'Event: ' + returnVal.logs[0].event + ' Mortgage ID: ' + mortgageLog.indexMortgageId +  ', Mortgagee: ' + mortgageLog.indexMortgagee + ', Mortgagor: ' + mortgageLog.indexMortgagor;
+    self.createAlert("updateMortgageAlert",log, 0);
     console.log("AFTER RETURNVAL");
 	  console.log(returnVal);	  
     }).catch(function(e) {
-      var feedback = document.getElementById("createFeedback");
-      feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
+      //var feedback = document.getElementById("createFeedback");
+      var logE = 'Error creating asset! User unauthorized, or invalid input'
+      self.createAlert("updateMortgageAlert",logE, 1);
       console.log(e);
 	    console.log("ERROR CREATING Mortgage");
     });
@@ -343,10 +345,14 @@ window.App = {
       meta = instance;
       return meta.acceptNewMortgage(mortgageID, {from: web3.eth.coinbase});
     }).then(function(returnVal) {
+      var log = "Success! Mortgage Created";
+      self.createAlert("signoffMortgage",log, 0);
       console.log(returnVal);
     }).catch(function(e) {
       //var feedback = document.getElementById("createFeedback");
       //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
+      var log = "Error! Unauthorized user or technical problem!";
+      self.createAlert("signoffMortgage",log, 1);
       console.log(e);
 	    console.log("ERROR Accept New Mortgage");
     });
@@ -360,10 +366,14 @@ window.App = {
       meta = instance;
       return meta.revokeNewMortgage(mortgageID, {from: web3.eth.coinbase});
     }).then(function(returnVal) {
+      var log = "Rejected notification!";
+      self.createAlert("signoffMortgage",log, 0);
       console.log(returnVal);
     }).catch(function(e) {
       //var feedback = document.getElementById("createFeedback");
       //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
+      var log = "Error! Unauthorized user or technical problem!";
+      self.createAlert("signoffMortgage",log, 1);
       console.log(e);
 	    console.log("ERROR Reject New Mortgage");
     });
@@ -463,8 +473,12 @@ window.App = {
       return meta.proposedMortgageSignoff(mortgageID, {from: web3.eth.coinbase});
     }).then(function(returnVal) {
       console.log(returnVal);
+      var log = "Success! Mortgage Created";
+      self.createAlert("signoffMortgage",log, 0);
     }).catch(function(e) {
       console.log(e);
+      var log = "Error! Unauthorized User or invalid input";
+      self.createAlert("signoffMortgage",log, 1);
 	    console.log("ERROR Accept New Mortgage");
     });
   },
@@ -477,11 +491,15 @@ window.App = {
       meta = instance;
       return meta.revokeProposedMortgage(mortgageID, {from: web3.eth.coinbase});
     }).then(function(returnVal) {
+      var log = "Rejected notification!";
+      self.createAlert("signoffMortgage",log, 0);
       console.log(returnVal);
       //add notification alert.
     }).catch(function(e) {
       //var feedback = document.getElementById("createFeedback");
       //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
+      var log = "Error! Unauthorized user or technical problem!";
+      self.createAlert("signoffMortgage",log, 1);
       console.log(e);
 	    console.log("ERROR Reject New Mortgage");
     });
