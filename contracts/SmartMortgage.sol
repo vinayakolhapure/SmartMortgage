@@ -51,7 +51,7 @@ struct PendingMortgageChange {
   mapping (uint => PendingMortgageChange) mortgageIdToPendingMortgageChangeMap; 
 
 //Events
-event MortgageCreatedEvent(address indexed indexMortgagee, address indexed indexMortgagor,  uint indexed indexMortgageId, address mortgagee , address mortgagor, uint morgageId);
+event MortgageCreatedEvent(address indexed indexMortgagee, address indexed indexMortgagor,  uint indexed indexMortgageId, address mortgagee , address mortgagor, uint morgageId, bool isActive, bool needSignoff);
 event ProposedUpdateEvent(address indexed indexMortgagee, address indexed indexMortgagor,  uint indexMortgageId, address mortgagee , address mortgagor);
 event ProposedSignoffEvent(address signer, string signerType);
 event ProposalFinalEvent(uint mortgageId);
@@ -214,10 +214,10 @@ function getMortgageIds(address _address) constant returns(uint[])
    var counter = 0;
    for (uint i = 0 ; i < mortgageCounter; i++) {
      var m =  mortgageIdToMortgageMap[i+1];  
-     if (m.currentInfo.mortgagor  == _address  ||  m.currentInfo.mortgagee == _address){
+     //if (m.currentInfo.mortgagor  == _address  ||  m.currentInfo.mortgagee == _address){
          localMortgageIds[i]=m.mortgageId;
          counter++;
-     }
+     //}
    }
    uint[] memory returnedMortgageIds = new uint[](counter);
    for (uint j = 0 ; j < counter; j++) {
@@ -256,7 +256,7 @@ function getMortgageIds(address _address) constant returns(uint[])
 
     
     mortgageCounter++;
-    Mortgage storage m = mortgageIdToMortgageMap[mortgageCounter];
+    Mortgage m = mortgageIdToMortgageMap[mortgageCounter];
     m.assetId = _assetId;
     m.mortgageId = mortgageCounter;
     m.isActive = false;
@@ -271,8 +271,10 @@ function getMortgageIds(address _address) constant returns(uint[])
     m.currentInfo.loanTermMonths = _loanTermMonths;
     m.currentInfo.interestWholePart = _interestWholePart;
     m.currentInfo.interestFractionPart = _interestFractionPart;
-    
+
+    //var info = MortgageInfo(_insertInfoTime,_mortgagee,_mortgagor,_loanStartDate,_loanAmount,_loanTermMonths,_interestWholePart,_interestFractionPart);
+    //var mortgageObject = Mortgage(block.number,_assetId,mortgageCounter,false,true,info);
     mortgageIdToMortgageMap[mortgageCounter] = m;
-    MortgageCreatedEvent(_mortgagee, _mortgagor, mortgageCounter,_mortgagee, _mortgagor,mortgageCounter);  //raise event
+    MortgageCreatedEvent(_mortgagee, _mortgagor, mortgageCounter,_mortgagee, _mortgagor,mortgageCounter,m.isActive,m.needSignOff);  //raise event
   }  
 }

@@ -1,148 +1,157 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Asset Registry</title>
-  <link rel="shortcut icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQa8AVXvo8iAWiMydz4a4BIpWNaY0gay2Wx0IRf96RoUFb3w0ZK" />
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-</head>
-<body>
-  <header class="navbar-inverse" role="banner">
-			<div class="container">
-				<nav role="navigation">
-				  <div class="container-fluid">
-					<!-- Brand and toggle get grouped for better mobile display -->
-					<div class="navbar-header">
-					  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					  </button>
-					  <a class="navbar-brand" href="index.html">Home</a>
-					</div>
-
-					<!-- Collect the nav links, forms, and other content for toggling -->
-					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-						<ul class="nav navbar-nav">
-							<li class="active"><a href="#">Register Mortgage<span class="sr-only">(current)</span></a></li>
-							<li><a href="updateMortgage.html">Update Mortgage</a></li>
-					  </ul>
-					  <div class="form-group navbar-form navbar-right">
-						  <li><button type="submit" onclick="App.todoMortgage()" class="btn btn-default">To Do</button></li>
-						</div>
-					</div><!-- /.navbar-collapse -->
-				  </div><!-- /.container-fluid -->
-				</nav>
-			</div>
-		</header>
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-12">
-					<div class="panel panel-default">
-					  <div class="panel-heading"><h3>Menu</h3></div>
-					  <div class="panel-body">
-						<div align="center">
-						<table class="table table-bordered table-hover">
-						  <tbody>
-							<tr>
-							  <a href="registerMortgage.html" class="btn btn-default btn-block">Create Mortgage
-							  </a>
-							</tr>
-							<tr>
-							  <a href="updateMortgage.html" class="btn btn-default btn-block">Update Mortgage
-							  </a>
-							</tr>
-						  </tbody>
-						</table>
-						</div>
-					  </div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!--<div class="container" id="searchResult">
-
-		</div>-->
-		<div class="container" id="todo" style="visibility: hidden;">
-			<div class="row">
-				<div class="col-sm-6">
-					<div class="panel panel-default">
-					  <div class="panel-heading"><h3>New Mortgage Requests</h3></div>
-					  <div class="panel-body">
-						<div align="center">
-              <div class="col-sm-12">    
-														<div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Mortgage ID</label>
-                                    <div class="col-sm-10">
-                                        <input class="form-control" id="mortgageIdToDo" placeholder="Mortgage ID">
-                                    </div>
-                             </div> 
-                            <div class="form-group row" id="todoNew">
-
-                             </div>
-                             <div class="form-group row">
-								  <div class="col-sm-6" align="left">
-                                     <button id="acceptNew" class="btn btn-default" onclick="App.acceptNew()">Accept</button>
-								  </div>
-                                  <div class="col-sm-6" align="right">
-                                     <button id="rejectNew" class="btn btn-default" onclick="App.rejectNew()">Reject</button>
-								  </div>
-							  </div>
-              </div>
-						</div>
-					  </div>
-					</div>
-				</div>
-                <div class="col-sm-6">
-					<div class="panel panel-default">
-					  <div class="panel-heading"><h3>Update Mortgage Requests</h3></div>
-					  <div class="panel-body">
-						<div align="center">
-							<!--<form>-->
-                <div class="col-sm-12">    
-                  <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label" id="mortgageUpdate">Mortgage ID</label>
-                                    <div class="col-sm-10">
-                                        <input class="form-control" placeholder="Mortgage ID">
-                                    </div>
-                             </div> 
-                            <div class="form-group row" id="todoUpdate">
-                                    <!--<label class="col-sm-2 col-form-label">Mortgage ID</label>
-                                    <div class="col-sm-10">
-                                        <input class="form-control" id="mortgageId" placeholder="Mortgage ID">
-                                    </div>-->
-                             </div>
-                             <div class="form-group row">
-								  							<div class="col-sm-6" align="left">
-                                     <button id="acceptUpdate" class="btn btn-default" onclick="App.acceptUpdate()">Accept</button>
-								 								 </div>
-                                  <div class="col-sm-6" align="right">
-                                     <button id="rejectUpdate" class="btn btn-default" onclick="App.rejectUpdate()">Reject</button>
-								  								</div>
-							  </div>
+   <head>
+      <title>Asset Registry</title>
+      <link rel="shortcut icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQa8AVXvo8iAWiMydz4a4BIpWNaY0gay2Wx0IRf96RoUFb3w0ZK" />
+      <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+   </head>
+   <body>
+      <header class="navbar-inverse" role="banner">
+         <div class="container">
+            <nav role="navigation">
+               <div class="container-fluid">
+                  <!-- Brand and toggle get grouped for better mobile display -->
+                  <div class="navbar-header">
+                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                     <span class="sr-only">Toggle navigation</span>
+                     <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                     </button>
+                     <a class="navbar-brand" href="index.html">Home</a>
+                  </div>
+                  <!-- Collect the nav links, forms, and other content for toggling -->
+                  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                     <ul class="nav navbar-nav">
+                        <li class="active"><a href="#">Register Mortgage<span class="sr-only">(current)</span></a></li>
+                        <li><a href="updateMortgage.html">Update Mortgage</a></li>
+                     </ul>
+                     <div class="form-group navbar-form navbar-right">
+                        <li><button type="submit" onclick="App.todoMortgage()" class="btn btn-default">To Do</button></li>
+                     </div>
+										 <div class="form-group navbar-form navbar-left">
+                        <input type="text" id="searchID" class="form-control" placeholder="Search">
+												<button type="submit" onclick="App.getMortgageByID()" class="btn btn-default">Search</button>
+                     </div>
+										 <div class="form-group navbar-form navbar-right">
+                     </div>
+                  </div>
+                  <!-- /.navbar-collapse -->
+               </div>
+               <!-- /.container-fluid -->
+            </nav>
+         </div>
+      </header>
+      <div class="container">
+         <div class="row">
+            <div class="col-sm-12">
+               <div class="panel panel-default">
+                  <div class="panel-heading">
+                     <h3>Menu</h3>
+                  </div>
+                  <div class="panel-body">
+                     <div align="center">
+                        <table class="table table-bordered table-hover">
+                           <tbody>
+                              <tr>
+                                 <a href="registerMortgage.html" class="btn btn-default btn-block">Create Mortgage
+                                 </a>
+                              </tr>
+                              <tr>
+                                 <a href="updateMortgage.html" class="btn btn-default btn-block">Update Mortgage
+                                 </a>
+                              </tr>
+                           </tbody>
+                        </table>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!--<div class="container" id="searchResult">
+         </div>-->
+      <div class="container" id="todo" style="visibility: hidden;">
+         <div class="row">
+            <div class="col-sm-6">
+               <div class="panel panel-default">
+                  <div class="panel-heading">
+                     <h3>New Mortgage Requests</h3>
+                  </div>
+                  <div class="panel-body">
+                     <div align="center">
+                        <div class="col-sm-12">
+                           <div class="form-group row">
+                              <label class="col-sm-2 col-form-label">Mortgage ID</label>
+                              <div class="col-sm-10">
+                                 <input class="form-control" id="mortgageIdToDo" placeholder="Mortgage ID">
                               </div>
-							<!--</form>-->
-						</div>
-						<!---->
-					  </div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="navbar navbar-inverse navbar-fixed-bottom">
-			<div class="container">
-			  <p class="navbar-text pull-left">© 2017 - By PLACEHOLDER, for #UnitedByHCL.
-				   <a href="https://www.hackerearth.com/sprints/unitedbyhcl/" target="_blank" >The Event</a>
-			  </p>
-
-			  <a href="https://www.ethereum.org/" class="navbar-btn btn-danger btn pull-right">
-			  <span class="glyphicon glyphicon-star"></span> The Ethereum Project</a>
-			</div>
-		</div>
-<script src="./app.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-</body>
+                           </div>
+                           <div class="form-group row" id="todoNew">
+                           </div>
+                           <div class="form-group row">
+                              <div class="col-sm-6" align="left">
+                                 <button id="acceptNew" class="btn btn-default" onclick="App.acceptNew()">Accept</button>
+                              </div>
+                              <div class="col-sm-6" align="right">
+                                 <button id="rejectNew" class="btn btn-default" onclick="App.rejectNew()">Reject</button>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-sm-6">
+               <div class="panel panel-default">
+                  <div class="panel-heading">
+                     <h3>Update Mortgage Requests</h3>
+                  </div>
+                  <div class="panel-body">
+                     <div align="center">
+                        <!--<form>-->
+                        <div class="col-sm-12">
+                           <div class="form-group row">
+                              <label class="col-sm-2 col-form-label" id="mortgageUpdate">Mortgage ID</label>
+                              <div class="col-sm-10">
+                                 <input class="form-control" placeholder="Mortgage ID">
+                              </div>
+                           </div>
+                           <div class="form-group row" id="todoUpdate">
+                              <!--<label class="col-sm-2 col-form-label">Mortgage ID</label>
+                                 <div class="col-sm-10">
+                                     <input class="form-control" id="mortgageId" placeholder="Mortgage ID">
+                                 </div>-->
+                           </div>
+                           <div class="form-group row">
+                              <div class="col-sm-6" align="left">
+                                 <button id="acceptUpdate" class="btn btn-default" onclick="App.acceptUpdate()">Accept</button>
+                              </div>
+                              <div class="col-sm-6" align="right">
+                                 <button id="rejectUpdate" class="btn btn-default" onclick="App.rejectUpdate()">Reject</button>
+                              </div>
+                           </div>
+                        </div>
+                        <!--</form>-->
+                     </div>
+                     <!---->
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="navbar navbar-inverse navbar-fixed-bottom">
+         <div class="container">
+            <p class="navbar-text pull-left">© 2017 - By PLACEHOLDER, for #UnitedByHCL.
+               <a href="https://www.hackerearth.com/sprints/unitedbyhcl/" target="_blank" >The Event</a>
+            </p>
+            <a href="https://www.ethereum.org/" class="navbar-btn btn-danger btn pull-right">
+            <span class="glyphicon glyphicon-star"></span> The Ethereum Project</a>
+         </div>
+      </div>
+      <script src="./app.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+   </body>
 </html>

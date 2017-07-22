@@ -228,10 +228,13 @@ window.App = {
     console.log("todo");
     SmartMortgage.deployed().then(function(instance) {
       meta = instance;
+      console.log(web3.eth.coinbase);
       return meta.getMortgageIds.call(web3.eth.coinbase);
     }).then(function(returnVal) {
+      console.log(returnVal);
       var todonew = document.getElementById("todoNew");
       for(var i=0; i< returnVal.length; i++){
+        //console.log('I: ' +i);
         self.getMortgageToDo(returnVal[i]);
     }
     document.getElementById("todo").style.visibility = "visible";
@@ -288,15 +291,35 @@ window.App = {
       meta = instance;
       return meta.getMortgageByMortgageID.call(mortgageID);
     }).then(function(returnVal) {
-      //self.getPendingMortgage(mortgageID);
-      console.log(returnVal);
-      if(returnVal[8]){//mortgagee don't have new mortgage requests. Only Update.
+      console.log('MortgageToDo' + ' ' + returnVal);
+      if(returnVal[8] && returnVal[2]!='0x0000000000000000000000000000000000000000'){//mortgagee don't have new mortgage requests. Only Update.
         var p = document.createElement('P');
         p.innerHTML = 'MortgageId: ' + mortgageID + ', Mortgagee: ' + returnVal[2] + ', Mortgagor: ' + returnVal[3];
         todoNew.appendChild(p);
         document.getElementById("mortgageIdToDo").value = mortgageID;
       }
-      self.getPendingMortgage(mortgageID);
+     // self.getPendingMortgage(mortgageID);
+    }).catch(function(e) {
+      //var feedback = document.getElementById("createFeedback");
+      //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
+      console.log(e);
+	    console.log("ERROR Get Mortgage BY ID");
+    });
+  },
+  getMortgageByID: function(id) {
+    var self = this;
+    console.log("Called");
+    var mortgageID = id;
+    //console.log(id);
+    var meta;
+    var searchId = parseInt(document.getElementById("searchID").value);
+    SmartMortgage.deployed().then(function(instance) {
+      meta = instance;
+      return meta.getMortgageByMortgageID.call(searchId);
+    }).then(function(returnVal) {
+      //self.getPendingMortgage(mortgageID);
+      console.log('Search' + ' ' + returnVal);
+     // self.getPendingMortgage(mortgageID);
     }).catch(function(e) {
       //var feedback = document.getElementById("createFeedback");
       //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
@@ -314,11 +337,12 @@ window.App = {
       return meta.getPendingMortgageChangeMap.call(mortgageId);
     }).then(function(returnVal) {
       //call get mortgagePendingInfo.
-      console.log('Old: ' + returnVal[6] + ' New: ' + returnVal[7]);
-      if((returnVal[1]==web3.eth.coinbase && !returnVal[6])|| !returnVal[7]){//mortgagee don't have new mortgage requests. Only Update.
+      console.log(returnVal);
+      if(returnVal[1]!='0x0000000000000000000000000000000000000000'){//mortgagee don't have new mortgage requests. Only Update.
         var p = document.createElement('P');
         p.innerHTML = 'MortgageId: ' + mortgageId + ', Mortgagee: ' + returnVal[1] + ', Mortgagor: ' + returnVal[2];
         todoUpdate.appendChild(p);
+        console.log("In pending: " + mortgageId);
         document.getElementById("mortgageUpdate").value = mortgageId;
       }
     }).catch(function(e) {
@@ -332,9 +356,11 @@ window.App = {
     var mortgageID = document.getElementById("mortgageUpdate").value;
     var meta;
     console.log("accept new");
+    console.log(mortgageID);
     //var todoNew = document.getElementById("todoNew");
     SmartMortgage.deployed().then(function(instance) {
       meta = instance;
+      console.log(web3.eth.coinbase);
       return meta.proposedMortgageSignoff(mortgageID, {from: web3.eth.coinbase});
     }).then(function(returnVal) {
       console.log(returnVal);
