@@ -106,6 +106,7 @@ window.App = {
 
   createAlert: function (elementId, log, status){
    var myAlert = document.getElementById(elementId);
+   console.log("Status: " + status);
    if(status==0)
     myAlert.className += " " + "alert-success";
    if(status==1) 
@@ -187,12 +188,20 @@ window.App = {
   },
   createMortgage: function() {
     console.log("Called");
+    var dt = new Date();
+    var date = dt.getDate();
+		var mm = dt.getMonth();
+		var year = dt.getFullYear();
+		var mm = dt.getMinutes();
+		var hh = dt.getHours();
     var self = this;
     var assetid = parseInt(document.getElementById("assetid").value);
-    var time = parseInt(document.getElementById("starttime").value);
+    //var time = hh+":"+mm;
+    var time = 0;
 	  var mortgagee = document.getElementById("mortgagee").value;
 	  var mortgagor = document.getElementById("mortgagor").value;
-    var datestart = parseInt(document.getElementById("datestart").value);
+    //var datestart = mm+"-"+date+"-"+year;
+    var datestart = 0;
     var principal = parseInt(document.getElementById("principal").value);
     var term = parseInt(document.getElementById("term").value);
     var interestwhole = parseInt(document.getElementById("interestwhole").value);
@@ -204,7 +213,7 @@ window.App = {
       return meta.createNewMortgage(assetid,time, mortgagee, mortgagor,datestart,principal,term,interestwhole,fraction, web3.eth.coinbase, {from: web3.eth.coinbase});
     }).then(function(returnVal) {
 	  var mortgageLog = returnVal.logs[0].args;
-    var log = 'Success' + 'Pending approval' + ' Event: ' + returnVal.logs[0].event + ' Mortgage ID: ' + mortgageLog.morgageId +  ', Mortgagee: ' + mortgageLog.indexMortgagee + ', Mortgagor: ' + mortgageLog.indexMortgagor;
+    var log = 'Success! ' + 'Pending approval' + ' Event: ' + returnVal.logs[0].event + ' Mortgage ID: ' + mortgageLog.morgageId +  ', Mortgagee: ' + mortgageLog.indexMortgagee + ', Mortgagor: ' + mortgageLog.indexMortgagor;
     self.createAlert("createMortgageAlert",log, 0);
     console.log("AFTER RETURNVAL"); 
 	  console.log(returnVal);	  
@@ -217,12 +226,20 @@ window.App = {
   },
   updateMortgage: function() {
     console.log("Called");
+    var dt = new Date();
+    var date = dt.getDate();
+		var mm = dt.getMonth();
+		var year = dt.getFullYear();
+		var mm = dt.getMinutes();
+		var hh = dt.getHours();
     var self = this;
     var mortgageId = parseInt(document.getElementById("mortgageId").value);
-    var time = parseInt(document.getElementById("starttime").value);
+    //var time = hh+":"+mm;
+    var time = 0;
 	  var mortgagee = document.getElementById("mortgagee").value;
 	  var mortgagor = document.getElementById("mortgagor").value;
-    var datestart = parseInt(document.getElementById("datestart").value);
+    var datestart = mm+"-"+date+"-"+year;
+    var datestart = 0;
     var principal = parseInt(document.getElementById("principal").value);
     var term = parseInt(document.getElementById("term").value);
     var interestwhole = parseInt(document.getElementById("interestwhole").value);
@@ -554,7 +571,7 @@ window.App = {
       principal.value = returnVal[5];
       term.value = returnVal[6];
       interestwhole.value = returnVal[7];
-      fraction.value = returnVal[8];
+      //fraction.value = returnVal[8];//sign off boolean
     }).catch(function(e) {
       //var feedback = document.getElementById("createFeedback");
       //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
@@ -601,6 +618,8 @@ window.App = {
       return meta.getMortgageByMortgageID.call(searchId);
     }).then(function(returnVal) {
       //self.getPendingMortgage(mortgageID);
+      var div = document.getElementById("searchMortgage");
+      div.innerHTML = "Search Result! " + "ID: " + returnVal[0] + " Mortgagee: " + returnVal[2] + " Mortgagor: " + returnVal[3] + " Date: " + returnVal[4];
       console.log('Search' + ' ' + returnVal);
      // self.getPendingMortgage(mortgageID);
     }).catch(function(e) {
