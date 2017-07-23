@@ -13,7 +13,7 @@ contract SmartMortgage is AssetRetriever {
   
   function SmartMortgage(AssetRetriever _assetRegistry){
     assetRegistry = _assetRegistry;
-    //assetRegistry = "0x36fe2725557cfdddaf8b977c0e97ebf670a9c063";
+    
   }
 
 //State Fields
@@ -62,8 +62,76 @@ event AcceptNewMortgageEvent(uint mortgageId, bool isActive,bool needSignOff);
 
 //Functions  
   function getRemoteAssetOwner(uint assetID) constant returns (address){
-      return assetRegistry.getAssetOwnerByAssetID(assetID);
+      return assetRegistry.getAssetOwnerByAssetID(assetID);//
   }
+
+  function getPreviousMortgageCoreInfo(uint _mortgageId) constant returns(uint[], address[],address[],uint[]){
+  //mortgageid, mortgagee, mortgagor, loandate, amount, term, interest
+  //uint[], address[], address[], uint[], uint[], uint[], uint[]
+    var mortgageObject = mortgageIdToMortgageMap[_mortgageId];
+
+    var arrLen = mortgageObject.previousInfo.length;
+    //Structs are not supported yet.
+    uint[] memory mortgageId = new uint[](arrLen);
+    address[] memory mortgageeArr = new address[](arrLen);
+    address[] memory mortgagorArr = new address[](arrLen);
+    uint[] memory loandateArr = new uint[](arrLen);
+    /*uint[] memory amountArr = new uint[](arrLen);
+    uint[] memory termArr = new uint[](arrLen);
+    uint[] memory interestArr = new uint[](arrLen);*/
+    
+    MortgageInfo[] memory previousInfo = new MortgageInfo[](arrLen);
+    for (uint i = 0 ; i < arrLen; i++) {
+      mortgageId[i] = _mortgageId;
+      mortgageeArr[i] = (mortgageObject.previousInfo[i].mortgagee);
+      mortgagorArr[i] = (mortgageObject.previousInfo[i].mortgagor);
+      loandateArr[i] = (mortgageObject.previousInfo[i].loanStartDate);
+      /*amountArr[i] = (mortgageObject.previousInfo[i].loanAmount);
+      termArr[i] = (mortgageObject.previousInfo[i].loanTermMonths);
+      interestArr[i] = (mortgageObject.previousInfo[i].interestWholePart);*/
+    }//0,1,2
+    return (mortgageId,mortgageeArr,mortgagorArr,loandateArr);
+  }  
+
+  function getPreviousMortgageFinInfo(uint _mortgageId) constant returns(uint[], uint[], uint[], uint[]){
+  //mortgageid, mortgagee, mortgagor, loandate, amount, term, interest
+  //uint[], address[], address[], uint[], 
+    var mortgageObject = mortgageIdToMortgageMap[_mortgageId];
+
+    var arrLen = mortgageObject.previousInfo.length;
+    //Structs are not supported yet.
+    uint[] memory mortgageId = new uint[](arrLen);
+    uint[] memory amountArr = new uint[](arrLen);
+    uint[] memory termArr = new uint[](arrLen);
+    uint[] memory interestArr = new uint[](arrLen);
+    
+    MortgageInfo[] memory previousInfo = new MortgageInfo[](arrLen);
+    for (uint i = 0 ; i < arrLen; i++) {
+      mortgageId[i] = _mortgageId;
+      amountArr[i] = (mortgageObject.previousInfo[i].loanAmount);
+      termArr[i] = (mortgageObject.previousInfo[i].loanTermMonths);
+      interestArr[i] = (mortgageObject.previousInfo[i].interestWholePart);
+    }//0,1,2,3
+    return (mortgageId,amountArr,termArr,interestArr);
+  }  
+
+function getMortgageIds(address _address) constant returns(uint[])
+{
+   uint[] memory localMortgageIds = new uint[](100);
+   var counter = 0;
+   for (uint i = 0 ; i < mortgageCounter; i++) {
+     var m =  mortgageIdToMortgageMap[i+1];  
+     //if (m.currentInfo.mortgagor  == _address  ||  m.currentInfo.mortgagee == _address){
+         localMortgageIds[i]=m.mortgageId;
+         counter++;
+     //}
+   }
+   uint[] memory returnedMortgageIds = new uint[](counter);
+   for (uint j = 0 ; j < counter; j++) {
+       returnedMortgageIds[j] = localMortgageIds[j];
+   }
+   return returnedMortgageIds;
+}
 
   function getMortgageByMortgageID (uint mortgageID) constant returns (uint,uint,address,address,uint,uint,uint,uint,bool) {
       var mortgage = mortgageIdToMortgageMap[mortgageID].currentInfo;
@@ -208,23 +276,7 @@ function isMortgagor(uint _mortgageId , address _address) constant returns(bool)
        return false;   
   }     
 
-function getMortgageIds(address _address) constant returns(uint[])
-{
-   uint[] memory localMortgageIds = new uint[](100);
-   var counter = 0;
-   for (uint i = 0 ; i < mortgageCounter; i++) {
-     var m =  mortgageIdToMortgageMap[i+1];  
-     //if (m.currentInfo.mortgagor  == _address  ||  m.currentInfo.mortgagee == _address){
-         localMortgageIds[i]=m.mortgageId;
-         counter++;
-     //}
-   }
-   uint[] memory returnedMortgageIds = new uint[](counter);
-   for (uint j = 0 ; j < counter; j++) {
-       returnedMortgageIds[j] = localMortgageIds[j];
-   }
-   return returnedMortgageIds;
-}
+
  
   function mortgagorApproveNewMortgage(uint _mortgageId){
      if (msg.sender != mortgageIdToMortgageMap[_mortgageId].currentInfo.mortgagor)

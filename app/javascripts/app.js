@@ -1,6 +1,7 @@
+import "../stylesheets/app.css";
 import { default as Web3} from 'web3';
 import { default as contract } from 'truffle-contract';
-
+import { default as BigNumber} from 'bignumber.js';
 // Import our contract artifacts and turn them into usable abstractions.
 import asset_artifacts from '../../build/contracts/AssetRegistry.json';
 import mortgage_artifacts from '../../build/contracts/SmartMortgage.json';
@@ -94,11 +95,13 @@ window.App = {
     }).then(function(returnVal) {
 	  console.log(returnVal);
 	  var assetLog = returnVal.logs[0].args;
+    document.getElementById("updateAssetLoader").style.visibility = "hidden";
     var log = 'Success! ' + returnVal.logs[0].event + ', Asset ID: ' + assetLog.assetId + ', Current Owner: ' + assetLog.currentOwner;
 	  self.createAlert("updateResult",log, 0);
     //result.innerHTML = 'Event: ' + returnVal.logs[0].event + ', Asset ID: ' + assetLog.assetId + ', Current Owner: ' + assetLog.currentOwner;
   }).catch(function(e) {
     var log = 'Update Error! User unauthorized, or invalid input';
+    document.getElementById("updateAssetLoader").style.visibility = "hidden";
     self.createAlert("updateResult",log, 1);
       console.log(e);
     });
@@ -130,6 +133,7 @@ window.App = {
   createAsset: function() {
     console.log("Called");
     var self = this;
+    var owner = document.getElementById("owner").value;
     var block = parseInt(document.getElementById("block").value);
 	  var borough = parseInt(document.getElementById("borough").value);
 	  var lot = parseInt(document.getElementById("lot").value);
@@ -137,18 +141,21 @@ window.App = {
     var meta;
     AssetRegistry.deployed().then(function(instance) {
       meta = instance;
-      return meta.createAsset(block, borough, lot, web3.eth.coinbase, {from: web3.eth.coinbase});
+      document.getElementById("createAssetLoader").style.visibility = "visible";
+      return meta.createAsset(block, borough, lot, owner, {from: web3.eth.coinbase});
     }).then(function(returnVal) {
     //var feedback = document.getElementById("createFeedback");
 	  var assetLog = returnVal.logs[0].args;
     //'Event: ' + returnVal.logs[0].event + ', Asset ID: ' + assetLog.assetId + ', Block: ' + assetLog.block + ', Borough: ' + assetLog.borough + ', Lot: ' + assetLog.lot + ', Current Owner: ' + assetLog.currentOwner;
     var log = 'Success! ' + returnVal.logs[0].event + ', Asset ID: ' + assetLog.assetId + ', Current Owner: ' + assetLog.currentOwner;
 	  self.createAlert("createAssetAlert",log, 0);
+    document.getElementById("createAssetLoader").style.visibility = "hidden";
 	  console.log(returnVal);	  
 	    //console.log(returnVal.logs);
     }).catch(function(e) {
       //var feedback = document.getElementById("createFeedback");
       var log = "Error! Creating Asset, invalid input or invalid user";
+      document.getElementById("createAssetLoader").style.visibility = "hidden";
       self.createAlert("createAssetAlert",log, 1)
       //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
       console.log(e);
@@ -188,37 +195,37 @@ window.App = {
   },
   createMortgage: function() {
     console.log("Called");
-    var dt = new Date();
-    var date = dt.getDate();
-		var mm = dt.getMonth();
-		var year = dt.getFullYear();
-		var mm = dt.getMinutes();
-		var hh = dt.getHours();
+    var curr = new Date();
+    
+    var dt = (curr.getTime());
     var self = this;
     var assetid = parseInt(document.getElementById("assetid").value);
-    //var time = hh+":"+mm;
-    var time = 0;
+    var time = Math.round(dt);
 	  var mortgagee = document.getElementById("mortgagee").value;
 	  var mortgagor = document.getElementById("mortgagor").value;
     //var datestart = mm+"-"+date+"-"+year;
-    var datestart = 0;
+    var userDate = document.getElementById("loanStart").valueAsDate;
+    var datestart = Date.parse(userDate);
+    console.log("date start: " + datestart);
     var principal = parseInt(document.getElementById("principal").value);
     var term = parseInt(document.getElementById("term").value);
     var interestwhole = parseInt(document.getElementById("interestwhole").value);
     var fraction = parseInt(document.getElementById("interestfraction").value);
-	
+    console.log("Date time" + dt);
     var meta;
     SmartMortgage.deployed().then(function(instance) {
       meta = instance;
       return meta.createNewMortgage(assetid,time, mortgagee, mortgagor,datestart,principal,term,interestwhole,fraction, web3.eth.coinbase, {from: web3.eth.coinbase});
     }).then(function(returnVal) {
 	  var mortgageLog = returnVal.logs[0].args;
+    document.getElementById("crMortgageLoader").style.visibility = "hidden";
     var log = 'Success! ' + 'Pending approval' + ' Event: ' + returnVal.logs[0].event + ' Mortgage ID: ' + mortgageLog.morgageId +  ', Mortgagee: ' + mortgageLog.indexMortgagee + ', Mortgagor: ' + mortgageLog.indexMortgagor;
     self.createAlert("createMortgageAlert",log, 0);
     console.log("AFTER RETURNVAL"); 
 	  console.log(returnVal);	  
     }).catch(function(e) {
-      var logE = 'Error creating mortgage! User unauthorized, or invalid input'
+      var logE = 'Error creating mortgage! User unauthorized, or invalid input';
+      document.getElementById("crMortgageLoader").style.visibility = "hidden";
       self.createAlert("createMortgageAlert",logE, 1);
       console.log(e);
 	    console.log("ERROR CREATING Mortgage");
@@ -226,20 +233,18 @@ window.App = {
   },
   updateMortgage: function() {
     console.log("Called");
-    var dt = new Date();
-    var date = dt.getDate();
-		var mm = dt.getMonth();
-		var year = dt.getFullYear();
-		var mm = dt.getMinutes();
-		var hh = dt.getHours();
     var self = this;
     var mortgageId = parseInt(document.getElementById("mortgageId").value);
     //var time = hh+":"+mm;
-    var time = 0;
+    var inputTime = new Date();
+    var mstime = new Date(inputTime);
+    var time = mstime.getTime();
+
 	  var mortgagee = document.getElementById("mortgagee").value;
-	  var mortgagor = document.getElementById("mortgagor").value;
-    var datestart = mm+"-"+date+"-"+year;
-    var datestart = 0;
+	  var mortgagor = document.getElementById("mortgagor").value;    
+    var inputDate = document.getElementById("datestart").value;
+    var msdate = new Date(inputDate);
+    var datestart = msdate.getTime();
     var principal = parseInt(document.getElementById("principal").value);
     var term = parseInt(document.getElementById("term").value);
     var interestwhole = parseInt(document.getElementById("interestwhole").value);
@@ -251,13 +256,15 @@ window.App = {
       return meta.proposedMortgageUpdate(mortgageId,time, mortgagee, mortgagor,datestart,principal,term,interestwhole,fraction, web3.eth.coinbase, {from: web3.eth.coinbase});
     }).then(function(returnVal) {
 	  var mortgageLog = returnVal.logs[0].args;
+    document.getElementById("upMortgageLoader").style.visibility = "hidden";
     var log = 'Success!' + 'Event: ' + returnVal.logs[0].event + ' Mortgage ID: ' + mortgageLog.indexMortgageId +  ', Mortgagee: ' + mortgageLog.indexMortgagee + ', Mortgagor: ' + mortgageLog.indexMortgagor;
     self.createAlert("updateMortgageAlert",log, 0);
     console.log("AFTER RETURNVAL");
 	  console.log(returnVal);	  
     }).catch(function(e) {
       //var feedback = document.getElementById("createFeedback");
-      var logE = 'Error creating asset! User unauthorized, or invalid input'
+      var logE = 'Error creating asset! User unauthorized, or invalid input';
+      document.getElementById("upMortgageLoader").style.visibility = "hidden";
       self.createAlert("updateMortgageAlert",logE, 1);
       console.log(e);
 	    console.log("ERROR CREATING Mortgage");
@@ -282,6 +289,7 @@ window.App = {
     }).then(function(returnVal) {
       console.log(returnVal);
       var todonew = document.getElementById("todoNew");
+      console.log("array length: " + returnVal.length)
       for(var i=0; i< returnVal.length; i++){
         //console.log('I: ' +i);
         self.getNewMortgageRequest(returnVal[i]);
@@ -326,7 +334,7 @@ window.App = {
           var btn = document.createElement('button');
           
           btn.className += " " +"btn";	
-          btn.className += " " +"btn-default";	
+          btn.className += " " +"btn-success";	
           btn.innerText = "Accept";
           
           var space  = document.createTextNode(' ');
@@ -336,7 +344,7 @@ window.App = {
           var btn2 = document.createElement('button');
           
           btn2.className += " " +"btn";	
-          btn2.className += " " +"btn-default";
+          btn2.className += " " +"btn-danger";
           btn2.innerText  = "Reject";
           btn2.setAttribute("onclick","App.rejectNew(this)");
 
@@ -354,7 +362,10 @@ window.App = {
   },
 
   acceptNew: function(el) {
+    var self = this;
     var mortgageID = el.parentNode.parentNode.cells[0].innerHTML;
+    var buttons = el.parentNode.parentNode.cells[3];
+    
     var meta;
     console.log("accept new");
     //var todoNew = document.getElementById("todoNew");
@@ -365,18 +376,27 @@ window.App = {
       var log = "Success! Mortgage Created";
       self.createAlert("signoffMortgage",log, 0);
       console.log(returnVal);
+      buttons.innerHTML="";
+      var msg = document.createElement('P');
+      msg.className += " " + "alert-success";
+      msg.innerHTML="Submitted!"
+      document.getElementById("upMortgageLoader").style.visibility = "hidden";
+      buttons.appendChild(msg);
     }).catch(function(e) {
       //var feedback = document.getElementById("createFeedback");
       //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
       var log = "Error! Unauthorized user or technical problem!";
+      document.getElementById("upMortgageLoader").style.visibility = "hidden";
       self.createAlert("signoffMortgage",log, 1);
       console.log(e);
 	    console.log("ERROR Accept New Mortgage");
     });
   },
   rejectNew: function(el) {
+    var self = this;
     var mortgageID = el.parentNode.parentNode.cells[0].innerHTML;
     var meta;
+    var buttons = el.parentNode.parentNode.cells[3];
     //var todoNew = document.getElementById("todoNew");
     console.log("reject new");
     SmartMortgage.deployed().then(function(instance) {
@@ -385,12 +405,18 @@ window.App = {
     }).then(function(returnVal) {
       var log = "Rejected notification!";
       self.createAlert("signoffMortgage",log, 0);
+      document.getElementById("upMortgageLoader").style.visibility = "hidden";
       console.log(returnVal);
+      var msg = document.createElement('P');
+      msg.className += " " + "alert-danger";
+      msg.innerHTML="Rejected!"
+      buttons.appendChild(msg);
     }).catch(function(e) {
       //var feedback = document.getElementById("createFeedback");
       //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
       var log = "Error! Unauthorized user or technical problem!";
       self.createAlert("signoffMortgage",log, 1);
+      document.getElementById("upMortgageLoader").style.visibility = "hidden";
       console.log(e);
 	    console.log("ERROR Reject New Mortgage");
     });
@@ -451,7 +477,7 @@ window.App = {
         var btn = document.createElement('button');
         
         btn.className += " " +"btn";	
-        btn.className += " " +"btn-default";	
+        btn.className += " " +"btn-success";	
         btn.innerText = "Accept";
         
         var space  = document.createTextNode(' ');
@@ -461,7 +487,7 @@ window.App = {
         var btn2 = document.createElement('button');
         
         btn2.className += " " +"btn";	
-        btn2.className += " " +"btn-default";
+        btn2.className += " " +"btn-danger";
         btn2.innerText  = "Reject";
         btn2.setAttribute("onclick","App.rejectUpdate(this)");
 
@@ -478,9 +504,11 @@ window.App = {
     });
   },
   acceptUpdate: function(el) {
+    var self = this;
     var mortgageID = el.parentNode.parentNode.cells[0].innerHTML;
     //var mortgageID = document.getElementById("mortgageUpdate").value;
     var meta;
+    var buttons = el.parentNode.parentNode.cells[3];
     console.log("accept update");
     console.log(mortgageID);
     //var todoNew = document.getElementById("todoNew");
@@ -492,9 +520,16 @@ window.App = {
       console.log(returnVal);
       var log = "Success! Mortgage Created";
       self.createAlert("signoffMortgage",log, 0);
+      var msg = document.createElement('P');
+      document.getElementById("upMortgageLoader").style.visibility = "hidden";
+      buttons.innerHTML="";
+      msg.className += " " + "alert-success";
+      msg.innerHTML="Submitted!"
+      buttons.appendChild(msg);
     }).catch(function(e) {
       console.log(e);
       var log = "Error! Unauthorized User or invalid input";
+      document.getElementById("upMortgageLoader").style.visibility = "hidden";
       self.createAlert("signoffMortgage",log, 1);
 	    console.log("ERROR Accept New Mortgage");
     });
@@ -502,6 +537,8 @@ window.App = {
   rejectUpdate: function(el) {
     var mortgageID = el.parentNode.parentNode.cells[0].innerHTML;
     var meta;
+    var self = this;
+    var buttons = el.parentNode.parentNode.cells[3];
     //var todoNew = document.getElementById("todoNew");
     console.log("reject new");
     SmartMortgage.deployed().then(function(instance) {
@@ -510,12 +547,19 @@ window.App = {
     }).then(function(returnVal) {
       var log = "Rejected notification!";
       self.createAlert("signoffMortgage",log, 0);
+      document.getElementById("upMortgageLoader").style.visibility = "hidden";
       console.log(returnVal);
+      var msg = document.createElement('P');
+      buttons.innerHTML="";
+      msg.className += " " + "alert-success";
+      msg.innerHTML="Submitted!"
+      buttons.appendChild(msg);
       //add notification alert.
     }).catch(function(e) {
       //var feedback = document.getElementById("createFeedback");
       //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
       var log = "Error! Unauthorized user or technical problem!";
+      document.getElementById("upMortgageLoader").style.visibility = "hidden";
       self.createAlert("signoffMortgage",log, 1);
       console.log(e);
 	    console.log("ERROR Reject New Mortgage");
@@ -563,11 +607,22 @@ window.App = {
       meta = instance;
       return meta.getMortgageByMortgageID.call(mortgageId);
     }).then(function(returnVal) {
-      console.log(returnVal);
-      time.value = returnVal[1];
+      
+      var seconds = new BigNumber(returnVal[1]);
+      console.log(seconds.toNumber());
+      console.log(seconds.toString());
+      var bigNSeconds = seconds;
+      var dt = new Date(bigNSeconds.toNumber());
+      
+      console.log("returned seconds " + bigNSeconds.toNumber());
+      console.log("returned seconds string " + bigNSeconds.toString());
+      
+      time.value = (dt.getMonth()+1) +"-"+dt.getDate()+ "-" + dt.getFullYear();
       mortgagee.value = returnVal[2];
       mortgagor.value = returnVal[3];
-      datestart.value = returnVal[4];
+      var loanSeconds = new BigNumber(returnVal[4]);
+      var loanDt = new Date(loanSeconds.toNumber());
+      datestart.value = (loanDt.getMonth()+1) +"-"+loanDt.getDate()+"-"+loanDt.getFullYear();
       principal.value = returnVal[5];
       term.value = returnVal[6];
       interestwhole.value = returnVal[7];
@@ -606,7 +661,154 @@ window.App = {
 	    console.log("ERROR Get Mortgage BY ID");
     });
   },
-  getMortgageByID: function(id) {
+  getMortgageByID: function() {
+    var self = this;
+    console.log("Called");
+    
+    var meta;
+    var searchId = parseInt(document.getElementById("searchID").value);
+    console.log(searchId);
+    SmartMortgage.deployed().then(function(instance) {
+      meta = instance;
+      return meta.getPreviousMortgageCoreInfo.call(searchId);
+    }).then(function(returnVal) {
+      console.log("Get Previous Info");
+     // console.log(returnVal);
+      var mortgageIDs = [];
+      var mortgaees = [];
+      var mortgagors = [];
+      var dateArr = [];
+      for(var i=0; i<returnVal.length; i++){
+        for(var j=0; j<returnVal[i].length; j++){
+          if(i==0){
+            mortgageIDs[j] = returnVal[i][j];
+            console.log(mortgageIDs[j]);
+          }
+          if(i==1){
+            mortgaees[j] = returnVal[i][j];
+            console.log(mortgaees[j]);
+          }
+          if(i==2){
+            mortgagors[j] = returnVal[i][j];
+            console.log(mortgagors[j]);
+          }
+          if(i==3){
+            dateArr[j] = returnVal[i][j];
+            console.log(dateArr[j]);
+          }
+        }
+      }
+      self.getMortgagePreviousFinInfo(searchId,mortgageIDs,mortgaees,mortgagors,dateArr);
+    }).catch(function(e) {
+      
+      console.log(e);
+	    console.log("ERROR Get Mortgage BY ID");
+    });
+  },
+  getMortgagePreviousFinInfo: function(searchId,mortgageIDs,mortgaees,mortgagors,dateArr) {
+    var self = this;
+    console.log("Called");
+    var ids = mortgageIDs;
+    var mortgaeesArr = mortgaees;
+    var mortgagorsArr = mortgagors;
+    var dateArr = dateArr;
+    var amountArr = [];
+    var termArr = [];
+    var interestArr = [];
+    console.log(mortgaeesArr);
+    var meta;
+    var searchId = parseInt(document.getElementById("searchID").value);
+    SmartMortgage.deployed().then(function(instance) {
+      meta = instance;
+      return meta.getPreviousMortgageFinInfo.call(searchId);
+    }).then(function(returnVal) {
+      console.log("Get Previous Info");
+      console.log(returnVal);
+      //mortgageId,amountArr,termArr,interestArr
+      for(var i=0; i<returnVal.length; i++){
+        for(var j=0; j<returnVal[i].length; j++){
+          if(i==1){
+            amountArr[j] = returnVal[i][j];
+            console.log(amountArr[j]);
+          }
+          if(i==2){
+            termArr[j] = returnVal[i][j];
+            console.log(termArr[j]);
+          }
+          if(i==3){
+            interestArr[j] = returnVal[i][j];
+            console.log(interestArr[j]);
+          }
+        }
+      }
+      self.assembleHistoryTable(searchId,ids,mortgaeesArr,mortgagorsArr,dateArr,amountArr,termArr,interestArr);
+    }).catch(function(e) {
+      
+      console.log(e);
+	    console.log("ERROR Get Mortgage BY ID");
+    });
+  },
+  assembleHistoryTable: function(searchId,ids,mortgaeesArr,mortgagorsArr,dateArr,amountArr,termArr,interestArr) {
+    var self = this;
+    console.log("Called");
+    var meta;
+    var searchId = parseInt(document.getElementById("searchID").value);
+    console.log("Assembly");
+    console.log(mortgaeesArr);
+    var tableRef = document.getElementById('prevHistoryTable').getElementsByTagName('tbody')[0];
+    tableRef.innerHTML = "";
+    for (var i=0; i< ids.length; i++){
+      var newRow = tableRef.insertRow(tableRef.rows.length);
+
+      var idcell  = newRow.insertCell(0);
+      var id = document.createTextNode(ids[i]);
+      idcell.appendChild(id);
+      var geeCell  = newRow.insertCell(1);
+      var gee = document.createTextNode(mortgaeesArr[i]);
+      geeCell.appendChild(gee);
+      var gorCell  = newRow.insertCell(2);
+      var gor = document.createTextNode(mortgagorsArr[i]);
+      gorCell.appendChild(gor);
+      var dateCell  = newRow.insertCell(3);
+          
+      
+
+      var loanSeconds = new BigNumber(dateArr[i]);
+      var loanDt = new Date(loanSeconds.toNumber());
+      var formatted = (loanDt.getMonth()+1) +"-"+loanDt.getDate()+"-"+loanDt.getFullYear();
+      var date = document.createTextNode(formatted);
+      dateCell.appendChild(date);
+
+      var amtCell  = newRow.insertCell(4);
+      var amt = document.createTextNode(amountArr[i]);
+      amtCell.appendChild(amt);
+      var termCell  = newRow.insertCell(5);
+      var term = document.createTextNode(termArr[i]);
+      termCell.appendChild(term);
+      var intCell  = newRow.insertCell(6);
+      var int = document.createTextNode(interestArr[i]);
+      intCell.appendChild(int);
+    }
+    SmartMortgage.deployed().then(function(instance) {
+      meta = instance;
+      return meta.getMortgageByMortgageID.call(searchId);
+    }).then(function(returnVal) {
+      
+      var loanSeconds = new BigNumber(returnVal[4]);
+      var loanDt = new Date(loanSeconds.toNumber());
+      //(loanDt.getMonth()+1) +"-"+loanDt.getDate()+"-"+loanDt.getFullYear();
+      var p = document.getElementById('currentText');
+      p.innerHTML = "";
+      p.innerHTML = '<strong>Current --</strong> ' + "<strong>Mortgagee:</strong> " + returnVal[2] + ", <strong>Mortgagor:</strong> " + returnVal[3];
+      //fraction.value = returnVal[8];//sign off boolean
+    }).catch(function(e) {
+      //var feedback = document.getElementById("createFeedback");
+      //feedback.innerHTML = 'Error creating asset! User unauthorized, or invalid input'
+      console.log(e);
+	    console.log("ERROR Get Mortgage BY ID");
+    });
+  }
+ /* getMortgageByID: function(id) {
     var self = this;
     console.log("Called");
     var mortgageID = id;
@@ -619,6 +821,10 @@ window.App = {
     }).then(function(returnVal) {
       //self.getPendingMortgage(mortgageID);
       var div = document.getElementById("searchMortgage");
+      var milliseconds = returnVal[4];
+      console.log(milliseconds);
+      //var dt = new Date(milliseconds.getTime());
+      //var dateValue = dt.getMonth()+"-"+dt.getDate()+"-"+dt.getFullYear();
       div.innerHTML = "Search Result! " + "ID: " + returnVal[0] + " Mortgagee: " + returnVal[2] + " Mortgagor: " + returnVal[3] + " Date: " + returnVal[4];
       console.log('Search' + ' ' + returnVal);
      // self.getPendingMortgage(mortgageID);
@@ -628,7 +834,7 @@ window.App = {
       console.log(e);
 	    console.log("ERROR Get Mortgage BY ID");
     });
-  }
+  }*/
   /*getPendingMortgage: function(id) {
     var mortgageId = id;
     console.log("pending update" + ' ' + id);
